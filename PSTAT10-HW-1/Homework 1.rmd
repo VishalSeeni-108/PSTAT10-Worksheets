@@ -1,0 +1,41 @@
+---
+title: "Homework 1"
+output: pdf_document
+---
+
+# Problem 1
+```{r eval=FALSE}
+beep <- function(sound=1, expr=NULL)
+```
+
+The from the 'beepr' package, named 'beep', takes two arguments, sound and expr. 
+
+# Problem 2
+One bug fix that is new in version 4.4.1 of R is as follows: "R CMD check now reports as warnings what gfortran calls ‘Fortran 2018 deleted features’, all of which have long been marked as ‘obsolescent’ and some of which were deleted in Fortran 2008 or earlier. Fortran compilers are no longer required to support these."
+
+# Problem 3
+```{r eval=FALSE}
+install.packages("datasets")
+library("datasets")
+
+mean(state.area)
+median(state.area)
+min_index <- which.min(state.area)
+paste(state.name[min_index], state.area[min_index], sep=" ")
+max_index <- which.max(state.area)
+paste(state.name[max_index], state.area[max_index], sep=" ")
+```
+Running the above code show that
+
+1. The mean area of all states is 72367.98 \newline
+2. The median area of all states is 56222 \newline
+3. The smallest state is Rhode Island with an area of 1214 \newline
+4. The largest state is Alaska with an area of 589757 \newline
+
+# Problem 4
+```{r eval=FALSE}
+my_time <- function()
+{
+    print(paste0("Hello, the time ", strptime(x = Sys.time(), format = "%H:%M:%S")))
+}
+```
