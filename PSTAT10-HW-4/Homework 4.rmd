@@ -1,0 +1,35 @@
+---
+title: "Homework 3"
+output: pdf_document
+---
+
+# Setup
+```{r}
+library(RSQLite)
+library(sqldf)
+library(DBI)
+chinook_db <- dbConnect(SQLite(), "Chinook_Sqlite.sqlite")
+```
+
+# Problem 1
+1.
+```{r}
+dbGetQuery(chinook_db, "SELECT CustomerId, FirstName, LastName
+                        FROM Customer
+                        WHERE CustomerId = 10")
+```
+2.
+```{r}
+dbGetQuery(chinook_db, "SELECT InvoiceId, CustomerId, Total
+                        FROM Invoice
+                        WHERE CustomerId = 10
+                        AND Total > 5")
+```
+3.
+```{r}
+dbGetQuery(chinook_db, "SELECT InvoiceId, Customer.CustomerId, Total, FirstName, LastName
+                        FROM Customer JOIN Invoice
+                        ON Customer.CustomerId = Invoice.CustomerId
+                        WHERE Customer.CustomerId = 10
+                        AND Total > 5")
+```
