@@ -1,0 +1,81 @@
+---
+title: "PSTAT 10 Worksheet 7"
+output:
+  pdf_document:
+    latex_engine: xelatex
+---
+
+## Setup
+```{r}
+library(RSQLite)
+library(sqldf)
+library(DBI)
+chinook_db <- dbConnect(SQLite(), "Chinook_Sqlite.sqlite")
+dbExecute(chinook_db, "pragma foreign_keys = on")
+set.seed(1)
+```
+
+
+## Problem 1
+
+1. Primary and foreign keys are used to model relations between data sets. Specifically, they are used to link related observations
+in different data sets together to show that they have a real world connection. 
+
+2. Relational databases use relations between primary and foreign keys to represent relations between different sets of 
+data. For example, a data set containing data on student grades would be related to a data set on personal information
+through a common key such as a student ID. 
+
+3. SQL is a standardized language used to work with relational databases. It can be implemented in different relational 
+database systems, or RDBSs. SQLite is a lightweight, serverless RDMS that implements SQL-compatible syntax. It is an 
+*implementation* of SQL in a RDBS. RSQLite is an R package that implements an interface between R and a SQLite implementation. 
+It provides functions for R to run SQLite queries on SQLite databases.  
+
+
+## Problem 2
+
+```{r}
+dbListTables(chinook_db)
+dbGetQuery(chinook_db, "pragma foreign_key_list(Album)")      
+dbGetQuery(chinook_db, "pragma foreign_key_list(Artist)")      
+dbGetQuery(chinook_db, "pragma foreign_key_list(Customer)")      
+dbGetQuery(chinook_db, "pragma foreign_key_list(Employee)")      
+dbGetQuery(chinook_db, "pragma foreign_key_list(Genre)")      
+dbGetQuery(chinook_db, "pragma foreign_key_list(Invoice)")      
+dbGetQuery(chinook_db, "pragma foreign_key_list(InvoiceLine)")      
+dbGetQuery(chinook_db, "pragma foreign_key_list(MediaType)")      
+dbGetQuery(chinook_db, "pragma foreign_key_list(Playlist)")      
+dbGetQuery(chinook_db, "pragma foreign_key_list(PlaylistTrack)")      
+dbGetQuery(chinook_db, "pragma foreign_key_list(Track)")      
+```
+The foreign key relations are: \newline
+Album.ArtistId -> Artist.ArtistId \newline
+Customer.EmployeeId -> Employee.SupportRepId \newline
+Employee.ReportsTo -> Employee.EmployeeId\newline
+Invoice.CustomerId -> Customer.CustomerId \newline
+InvoiceLine.TrackId -> Track.TrackId \newline
+InvoiceLine.InvoiceId -> Invoice.InvoiceId   \newline
+PlaylistTrack.TrackId -> Track.TrackId \newline
+PlaylistTrack.PlaylistId -> Playlist.PlaylistId  \newline
+Track.MediaTypeId -> MediaType.MediaTypeId \newline
+Track.GenreId -> Genre.GenreId \newline
+Track.AlbumId -> Album.AlbumId \newline
+
+
+## Problem 3
+
+1. 
+
+```{r}
+dbGetQuery(chinook_db, "SELECT CustomerId, FirstName, LastName, State, Country
+                        FROM Customer 
+                        WHERE State='CA'")
+```
+
+2. 
+
+```{r}
+dbGetQuery(chinook_db, "SELECT count(*)
+                        FROM Customer
+                        WHERE Country='Brazil'")
+```
+There are 5 customers from Brazil. 

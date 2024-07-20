@@ -1,0 +1,39 @@
+---
+title: "PSTAT 10 Worksheet 6"
+output:
+  pdf_document:
+    latex_engine: xelatex
+---
+## Setup
+```{r}
+library(tidyverse)
+set.seed(10)
+```
+
+
+## Problem 1
+1. X ~ 3
+2. 
+```{r}
+mean(rbinom(10000, 10, 0.3))
+```
+The estimated number of heads is 3.0094. 
+
+
+## Problem 2
+```{r}
+plot(dbinom(c(0:10),10,0.18), type="h", lwd=5, xlab="k", ylab="p", main="PMF of Binom(10,0.18)")
+```
+
+## Problem 3
+```{r}
+roll_15 <- function()
+{
+    rolls <- sample(1:6, 15, replace=TRUE)
+    sums <- cumsum(rolls)
+    return(which(sums >= 15)[1])   
+}
+
+mean(replicate(10000, roll_15()))
+```
+The expected number of rolls to get a score that exceeds 15 is 4.761. 
