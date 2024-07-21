@@ -1,10 +1,11 @@
 ---
-title: "Homework 3"
+title: "Homework 4"
 output: pdf_document
 ---
 
 # Setup
 ```{r}
+setwd('C:/Users/visha/OneDrive/Documents/School/Summer 2024/PSTAT 10/PSTAT10-Worksheets-and-HW')
 library(RSQLite)
 library(sqldf)
 library(DBI)
@@ -33,3 +34,85 @@ dbGetQuery(chinook_db, "SELECT InvoiceId, Customer.CustomerId, Total, FirstName,
                         WHERE Customer.CustomerId = 10
                         AND Total > 5")
 ```
+
+# Problem 2
+1.
+```{r}
+dbGetQuery(chinook_db, "SELECT Title
+                        FROM Employee
+                        WHERE ReportsTo IS NULL")
+```
+The title of the highest ranking employee is General Manager. 
+
+2. 
+```{r}
+dbGetQuery(chinook_db, "SELECT Employee.EmployeeId, Employee.FirstName, Employee.LastName, Title, count(*) 
+                        FROM Employee JOIN Customer
+                        ON Employee.EmployeeId = Customer.SupportRepId
+                        GROUP BY EmployeeId")
+```
+
+Jane has acted as the support rep for the most customers. 
+
+# Problem 3
+```{r}
+dbGetQuery(chinook_db, "SELECT Album.AlbumId, Title, sum(Milliseconds)/60000 AS TotalLength
+                        FROM Album JOIN Track
+                        ON Album.AlbumId = Track.AlbumId
+                        GROUP BY Album.AlbumId
+                        HAVING TotalLength > 100
+                        ORDER BY TotalLength DESC")
+```
+
+\newpage
+
+# Problem 4
+1.
+```{r}
+dbGetQuery(chinook_db, "SELECT Track.TrackId, Track.Name AS TrackName, Playlist.PlaylistId, Playlist.Name AS PlaylistName
+                        FROM Track JOIN Playlist JOIN PlaylistTrack
+                        ON Track.TrackId = PlaylistTrack.TrackId AND PlaylistTrack.PlaylistId = Playlist.PlaylistId
+                        ORDER BY Playlist.PlaylistId, Track.TrackId 
+                        LIMIT 5")
+```
+
+2.
+```{r}
+dbGetQuery(chinook_db, "SELECT Playlist.PlaylistId, Playlist.Name AS PlaylistName, count(*)
+                        FROM Track JOIN Playlist JOIN PlaylistTrack
+                        ON Track.TrackId = PlaylistTrack.TrackId AND PlaylistTrack.PlaylistId = Playlist.PlaylistId
+                        GROUP BY Playlist.PlaylistId")
+```
+
+
+# Problem 5
+1.
+```{r}
+dbGetQuery(chinook_db, "SELECT FirstName, LastName, Total
+                       FROM Customer JOIN Invoice
+                       ON Customer.CustomerId = Invoice.CustomerId
+                       ORDER BY Total DESC
+                       LIMIT 10")
+```
+
+2.
+```{r}
+dbGetQuery(chinook_db, "SELECT FirstName, LastName, sum(Total)
+                       FROM Customer JOIN Invoice
+                       ON Customer.CustomerId = Invoice.CustomerId
+                       GROUP BY Customer.CustomerId
+                       ORDER BY sum(Total) DESC
+                       LIMIT 10")
+```
+
+3.
+```{r}
+dbGetQuery(chinook_db, "SELECT Country, sum(Total) AS CountryTotal
+                       FROM Customer JOIN Invoice
+                       ON Customer.CustomerId = Invoice.CustomerId
+                       GROUP BY Country
+                       ORDER BY sum(Total) DESC
+                       LIMIT 10")
+```
+
+
