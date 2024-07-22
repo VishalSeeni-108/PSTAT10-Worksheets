@@ -1,0 +1,70 @@
+---
+title: "PSTAT 10 Worksheet 8"
+output:
+  pdf_document:
+    latex_engine: xelatex
+---
+
+## Setup
+```{r}
+setwd('C:/Users/visha/OneDrive/Documents/School/Summer 2024/PSTAT 10/PSTAT10-Worksheets-and-HW')
+library(RSQLite)
+library(sqldf)
+library(DBI)
+chinook_db <- dbConnect(SQLite(), "Chinook_Sqlite.sqlite")
+```
+
+
+## Problem 1
+1.
+```{r}
+dbGetQuery(chinook_db, "SELECT GenreId, sum(milliseconds)/60000
+                        FROM Track
+                        WHERE GenreId = 2")
+```
+
+2.
+```{r}
+dbGetQuery(chinook_db, "SELECT Genre.Name, Genre.GenreId, sum(milliseconds)/60000
+                        FROM Track JOIN Genre
+                        ON Track.GenreId = Genre.GenreId
+                        WHERE Genre.GenreId = 2")
+```
+
+3. 
+```{r}
+dbGetQuery(chinook_db, "SELECT Genre.Name, Genre.GenreId, sum(milliseconds)/60000
+                        FROM Track JOIN Genre
+                        ON Track.GenreId = Genre.GenreId
+                        GROUP BY Genre.GenreId")
+```
+
+## Problem 2
+
+```{r}
+dbGetQuery(chinook_db, "SELECT Employee.EmployeeId AS RepId, Employee.FirstName as RepFirstName, 
+                        Employee.LastName as RepLastName, CustomerId, Customer.FirstName as CustFirstName,
+                        Customer.LastName as CustLastName
+                        FROM Customer JOIN Employee
+                        ON Customer.SupportRepId = Employee.EmployeeId
+                        WHERE Customer.FirstName = 'Heather' AND Customer.LastName = 'Leacock'")
+```
+
+
+## Problem 3
+1.
+```{r}
+dbGetQuery(chinook_db, "SELECT count(DISTINCT Country)
+                        FROM Customer")
+```
+Customers are from 24 different countries. 
+
+2.
+```{r}
+dbGetQuery(chinook_db, "SELECT DISTINCT Title
+                        FROM Employee")
+```
+
+3.
+No, distinct was not necessary here. GenreId is the primary key of Genre, and in order to maintain entity integrity
+every row would need to have a *unique* value for GenreId - thus every value for GenreId is inherently distinct.
