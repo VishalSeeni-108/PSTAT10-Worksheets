@@ -1,0 +1,31 @@
+---
+title: "PSTAT 10 Worksheet 9"
+output:
+  pdf_document:
+    latex_engine: xelatex
+---
+
+## Setup
+```{r}
+setwd('C:/Users/visha/OneDrive/Documents/School/Summer 2024/PSTAT 10/PSTAT10-Worksheets-and-HW')
+library(tidyverse)
+hibbs <- as_tibble(read.csv("hibbs.dat", sep=" "))
+```
+
+
+## Problem 1
+```{r}
+plot <- ggplot(hibbs, mapping = aes(x = growth, y = vote))
+plot + geom_smooth(method='lm', se= FALSE, col="red") +
+       geom_hline(yintercept=50, col="gray") + 
+       geom_point() +
+       ggrepel::geom_text_repel(data=NULL, mapping = aes(x = growth, y = vote, label=year), nudge_x=0.05) +
+       guides(fill = "none") +
+       labs(x = "Avg. recent growth in personal income", y = "Incumbent party's vote share", 
+            title = "Bread and Peace",subtitle = "Forecasting the election from the economy", 
+            caption= "Source: Douglas Hibbs") +
+       scale_x_continuous(breaks=c(0,1,2,3,4), labels=c('0%','1%','2%','3%','4%')) +
+       scale_y_continuous(breaks=c(45,50,55,60), labels=c('45%','50%','55%','60%')) +
+       theme_classic()
+
+```
