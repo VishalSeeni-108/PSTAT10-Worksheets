@@ -7,7 +7,7 @@ output:
 
 ## Setup
 ```{r}
-setwd('C:/Users/visha/OneDrive/Documents/School/Summer 2024/PSTAT 10/PSTAT10-Worksheets-and-HW')
+setwd('G:/Documents/School/2023-2024/Summer 2024/PSTAT 10/PSTAT10-Worksheets-and-HW')
 library(tidyverse)
 hibbs <- as_tibble(read.csv("hibbs.dat", sep=" "))
 ```
@@ -19,7 +19,7 @@ plot <- ggplot(hibbs, mapping = aes(x = growth, y = vote))
 plot + geom_smooth(method='lm', se= FALSE, col="red") +
        geom_hline(yintercept=50, col="gray") + 
        geom_point() +
-       ggrepel::geom_text_repel(data=NULL, mapping = aes(x = growth, y = vote, label=year), nudge_x=0.05) +
+       ggrepel::geom_text_repel(data=NULL, mapping = aes(x = growth, y = vote, label=year)) +
        guides(fill = "none") +
        labs(x = "Avg. recent growth in personal income", y = "Incumbent party's vote share", 
             title = "Bread and Peace",subtitle = "Forecasting the election from the economy", 
@@ -28,4 +28,20 @@ plot + geom_smooth(method='lm', se= FALSE, col="red") +
        scale_y_continuous(breaks=c(45,50,55,60), labels=c('45%','50%','55%','60%')) +
        theme_classic()
 
+```
+
+## Problem 2
+```{r}
+p <- ggplot(mpg, mapping = aes(x = cyl, y = hwy))
+p + geom_boxplot(mapping=aes(group=cyl))
+```
+
+## Problem 3
+```{r}
+library(babynames)
+robin <- filter(babynames, name == "Robin")
+robin_plot <- ggplot(robin, mapping = aes(x = year, y = n, color=sex))
+robin_plot + geom_line() +
+             guides(fill = "Sex") +
+             labs(x = "Year", y = "Number", title = "Number of babies named Robin", caption = "Source: SSA")
 ```
