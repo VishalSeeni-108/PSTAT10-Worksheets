@@ -1,0 +1,26 @@
+---
+title: "Homework 5"
+output: pdf_document
+---
+
+# Setup
+```{r}
+setwd('C:/Users/visha/OneDrive/Documents/School/Summer 2024/PSTAT 10/PSTAT10-Worksheets-and-HW')
+library(tidyverse)
+library(datasets)
+```
+
+# Problem 1
+```{r}
+aqdata <- as_tibble(airquality)
+tempData1 <- aqdata |> filter(Temp >= 80) |> mutate(Feels = 'Hotter')
+tempData2 <- aqdata |> filter(Temp < 80) |> mutate(Feels = 'Colder') 
+aqdata <- rbind(tempData1, tempData2)
+plot <- ggplot(aqdata, mapping = aes(x = Wind, y = Ozone, color=Feels))
+plot + geom_point(aes()) +
+       geom_smooth(method='lm', se = TRUE, col='#3366ff') +
+       scale_color_manual(values = c("Colder" = "cadetblue3", "Hotter" = "tomato"), name=NULL) +
+       labs(x = 'Wind (mph)', y = 'Ozone (ppb)', title='Ozone and Wind in NYC, 1973') +
+       guides(fill=guide_legend(title='test')) +
+       theme_classic() 
+```
