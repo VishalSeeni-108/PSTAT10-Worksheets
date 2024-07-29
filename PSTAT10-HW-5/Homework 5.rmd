@@ -8,6 +8,8 @@ output: pdf_document
 setwd('C:/Users/visha/OneDrive/Documents/School/Summer 2024/PSTAT 10/PSTAT10-Worksheets-and-HW')
 library(tidyverse)
 library(datasets)
+library(scales)
+library(ggrepel)
 ```
 
 # Problem 1
@@ -23,4 +25,71 @@ plot + geom_point(aes()) +
        labs(x = 'Wind (mph)', y = 'Ozone (ppb)', title='Ozone and Wind in NYC, 1973') +
        guides(fill=guide_legend(title='test')) +
        theme_classic() 
+```
+
+# Problem 2
+```{r}
+checkDerange <- function(sequence)
+{
+       for(i in 1:length(sequence))
+       {
+              if(i == sequence[i])
+              {
+                     return(FALSE)
+              }
+       }
+       return(TRUE)
+}
+
+trial <- function(numReps)
+{
+       values <- replicate(n=numReps, sample(1:100))
+       isDerange = c()
+       for(i in 1:numReps)
+       {
+              isDerange[i] = checkDerange(values[,i])
+       }
+       return(sum(isDerange)/length(isDerange))
+}
+
+
+plot_values = c()
+for(i in 1:2000)
+{
+       plot_values[i] = trial(i)
+}
+plot_x = 1:2000
+plot_2_df <- data.frame(plot_x, plot_values)
+
+plot_2 <- ggplot(plot_2_df, mapping=aes(x = plot_x, plot_values))
+plot_2 + geom_line() +
+         geom_hline(yintercept=0.368, col='red') +
+         labs(x = 'Number of replications', y = 'p', title = 'Probability of a derangement') +
+         theme_classic() +
+         coord_cartesian(ylim = c(0, 1.0)) 
+```
+
+# Problem 3
+```{r}
+who_tidy <- who |>
+  pivot_longer(cols = new_sp_m014:newrel_f65,
+               names_to = "key",
+               values_to = "cases",
+               values_drop_na = TRUE) |>
+  mutate(key = stringr::str_replace(key, "newrel", "new_rel")) |>
+  separate(key, c("new", "type", "sexage"), sep = "_") |>
+  select(-new, -iso2, -iso3) |>
+  separate(sexage, c("sex", "age"), 1)
+who_tidy
+
+plot_3_tb <- who_tidy |> group_by(country, year, sex) |> summarise(numCases=sum(cases))
+plot_3 <- ggplot(plot_3_tb, mapping=aes(x=year, y=numCases)) 
+plot_3 + geom_jitter(aes(group=country), width=0.3, alpha=0.2) +
+         geom_text_repel(data=filter(plot_3_tb, country=='India', year==2007), col='red', vjust=0, label='India 2007') +
+         facet_wrap(~sex, labeller=labeller(sex = c('f' = 'Women','m' = 'Men'))) +
+         coord_cartesian(ylim=(c(0,800000))) +
+         scale_y_continuous(labels=label_comma()) +
+         scale_x_continuous(breaks = seq(1980, 2015, by = 5)) +
+         labs(x='', y='Total Cases', title = 'Tubercolosis Cases in Countries by Year',
+              subtitle = 'Dramatic increase in case count since mid 90s', caption = 'Source: World Health Organizations')
 ```
