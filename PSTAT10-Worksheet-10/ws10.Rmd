@@ -1,0 +1,23 @@
+---
+title: "PSTAT 10 Worksheet 10"
+output:
+  pdf_document:
+    latex_engine: xelatex
+---
+
+## Setup
+```{r}
+library(tidyverse)
+library(socviz)
+```
+
+
+## Problem 1
+```{r}
+plot_gss_sm_male <- gss_sm |> filter(obama == 1, sex=='Male') |> group_by(polviews, sex) |> summarize(count = n()) |> ungroup() |> mutate(percentage= count/sum(count))
+plot_gss_sm_female <- gss_sm |> filter(obama == 1, sex=='Female') |> group_by(polviews, sex) |> summarize(count = n()) |> ungroup() |> mutate(percentage= count/sum(count))
+plot_gss_sm <- rbind(plot_gss_sm_male, plot_gss_sm_female)
+plot <- ggplot(plot_gss_sm, mapping=aes(x=percentage, y=polviews, group=sex, fill=sex))
+plot  + geom_col(aes(group=sex)) +
+        facet_wrap(~sex)
+```
