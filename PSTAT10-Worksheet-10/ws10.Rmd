@@ -14,10 +14,14 @@ library(socviz)
 
 ## Problem 1
 ```{r}
-plot_gss_sm_male <- gss_sm |> filter(obama == 1, sex=='Male') |> group_by(polviews, sex) |> summarize(count = n()) |> ungroup() |> mutate(percentage= count/sum(count))
-plot_gss_sm_female <- gss_sm |> filter(obama == 1, sex=='Female') |> group_by(polviews, sex) |> summarize(count = n()) |> ungroup() |> mutate(percentage= count/sum(count))
+plot_gss_sm_male <- gss_sm |> filter(obama == 1, sex=='Male') |> group_by(polviews, sex) |> summarize(count = n()) |> ungroup() |> mutate(percentage= count/sum(count)) |> drop_na()
+plot_gss_sm_female <- gss_sm |> filter(obama == 1, sex=='Female') |> group_by(polviews, sex) |> summarize(count = n()) |> ungroup() |> mutate(percentage= count/sum(count)) |> drop_na()
 plot_gss_sm <- rbind(plot_gss_sm_male, plot_gss_sm_female)
 plot <- ggplot(plot_gss_sm, mapping=aes(x=percentage, y=polviews, group=sex, fill=sex))
 plot  + geom_col(aes(group=sex)) +
-        facet_wrap(~sex)
+        facet_wrap(~sex) + 
+        labs(x = '', y = 'Political views', title='Political views and voting in the 2012 election', subtitle='Obama\'s vote share among men and women', caption='Source: GSS') +
+        scale_x_continuous(breaks=c(0.0, 0.1, 0.2, 0.3), labels=c('0%', '10%', '20%', '30%')) + 
+        guides(fill='none') +
+        theme_minimal()
 ```

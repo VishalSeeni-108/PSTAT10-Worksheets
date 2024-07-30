@@ -5,7 +5,6 @@ output: pdf_document
 
 # Setup
 ```{r}
-setwd('C:/Users/visha/OneDrive/Documents/School/Summer 2024/PSTAT 10/PSTAT10-Worksheets-and-HW')
 library(tidyverse)
 library(datasets)
 library(scales)
@@ -92,4 +91,28 @@ plot_3 + geom_jitter(aes(group=country), width=0.3, alpha=0.2) +
          scale_x_continuous(breaks = seq(1980, 2015, by = 5)) +
          labs(x='', y='Total Cases', title = 'Tubercolosis Cases in Countries by Year',
               subtitle = 'Dramatic increase in case count since mid 90s', caption = 'Source: World Health Organizations')
+```
+
+## Problem 4
+
+**Part 1**
+The main issue with this dataset is that the column headers are values rather than variables. A tidy dataset would hold the values of these column headers under one variable/column.
+
+**Part 2**
+```{r}
+relig_income_tidy <- relig_income |> pivot_longer(cols = c('<$10k', '$10-20k', '$20-30k', '$30-40k', '$40-50k', '$50-75k', '$75-100k'), 
+                                                  names_to = "income",
+                                                  values_to = "frequency") |>
+                                     select(religion, income, frequency)
+```
+
+**Part 3**
+```{r}
+plot_4 <- ggplot(relig_income_tidy, mapping=aes(x=frequency, y=reorder(religion, frequency), fill=religion))
+plot_4  + geom_col() +
+          guides(fill="none") +
+          coord_cartesian(xlim=(c(0,7500))) +
+          scale_x_continuous(breaks = seq(0,7500, by=2500)) +
+          labs(x = '', y = '', title = 'Participants in Pew Research Survey', caption = 'Source: Pew Research Center') +
+          theme_minimal()
 ```
